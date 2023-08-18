@@ -228,6 +228,11 @@ class MPLPlot(ABC):
             grid = False if secondary_y else plt.rcParams["axes.grid"]
 
         self.grid = grid
+        self.grid_kwargs = (
+            {}
+            if not grid
+            else {key: plt.rcParams[f"axes.grid.{key}"] for key in ["which", "axis"]}
+        )
         self.legend = legend
         self.legend_handles: list[Artist] = []
         self.legend_labels: list[Hashable] = []
@@ -706,7 +711,7 @@ class MPLPlot(ABC):
             if self.ylabel is not None:
                 ax.set_ylabel(pprint_thing(self.ylabel))
 
-            ax.grid(self.grid)
+            ax.grid(self.grid, **self.grid_kwargs)
 
         if self.title:
             if self.subplots:
